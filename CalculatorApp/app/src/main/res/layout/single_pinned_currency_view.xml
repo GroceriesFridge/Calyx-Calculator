@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/button_first_conversion"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/pinned_widget_background"
-    android:visibility="visible"
-    android:layout_margin="3dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/name"
+    <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:elevation="0dp"
-        android:fontFamily="@font/montserrat_bold"
-        android:includeFontPadding="false"
-        android:padding="10dp"
+        android:layout_height="40dp"
+        android:id="@+id/name"
+        android:backgroundTint="?android:attr/colorAccent"
+        app:cornerRadius="50dp"
         android:text="@string/pinned_currency_sample"
-        android:textColor="?android:attr/textColor"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        android:visibility="visible"
-        app:cornerRadius="50dp" />
+        android:fontFamily="@font/montserrat_bold"
+        android:textSize="12sp"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="3dp"/>
 
 </LinearLayout>
