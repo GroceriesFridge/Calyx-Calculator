@@ -40,7 +40,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:orientation="horizontal">
@@ -81,70 +81,59 @@
         android:orientation="horizontal">
 
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button7"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:fontFamily="@font/montserrat"
-            android:src="@drawable/ic_seven"
-            android:contentDescription="@string/add"
-            app:tint="?android:attr/textColor"/>
+            android:text="@string/_7"
+            android:textSize="28sp" />
 
-
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button8"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:fontFamily="@font/montserrat"
-            android:src="@drawable/ic_eight"
-            android:contentDescription="@string/add"
-            app:tint="?android:attr/textColor"/>
+            android:text="@string/_8"
+            android:textSize="28sp" />
 
-
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button9"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:fontFamily="@font/montserrat"
-            android:src="@drawable/ic_nine"
-            android:contentDescription="@string/add"
-            app:tint="?android:attr/textColor"/>
-
+            android:text="@string/_9"
+            android:textSize="28sp" />
 
         <ImageButton
             android:id="@+id/button_division"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:fontFamily="@font/montserrat"
             android:src="@drawable/ic_divide"
-            android:contentDescription="@string/add"
-            app:tint="@color/operationOrange"/>
-
+            android:contentDescription="@string/divide"
+            app:tint="?android:attr/textColor" />
 
         <ImageButton
             android:id="@+id/button_delete"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:fontFamily="@font/montserrat"
             android:src="@drawable/ic_delete"
-            android:contentDescription="@string/add"
-            app:tint="@color/operationOrange"/>
-
+            android:contentDescription="@string/delete"
+            app:tint="?android:attr/textColor"/>
 
     </LinearLayout>
 
@@ -152,82 +141,63 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/_4"
+            android:textSize="28sp" />
 
-            <ImageButton
-                android:id="@+id/button4"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="3dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/montserrat"
-                android:src="@drawable/ic_four"
-                android:contentDescription="@string/add"
-                app:tint="?android:attr/textColor"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/_5"
+            android:textSize="28sp" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button6"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/_6"
+            android:textSize="28sp" />
 
-            <ImageButton
-                android:id="@+id/button5"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="3dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/montserrat"
-                android:src="@drawable/ic_five"
-                android:contentDescription="@string/add"
-                app:tint="?android:attr/textColor"/>
+        <ImageButton
+            android:id="@+id/button_multiplication"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat"
+            android:src="@drawable/ic_multiplication"
+            android:contentDescription="@string/multiply"
+            app:tint="?android:attr/textColor" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/_percentage"
+            android:textSize="28sp" />
 
-            <ImageButton
-                android:id="@+id/button6"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="3dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/montserrat"
-                android:src="@drawable/ic_six"
-                android:contentDescription="@string/add"
-                app:tint="?android:attr/textColor"/>
-
-
-            <ImageButton
-                android:id="@+id/button_multiplication"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="3dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/montserrat"
-                android:src="@drawable/ic_multiplication"
-                android:contentDescription="@string/multiply"
-                app:tint="@color/operationOrange" />
-
-            <ImageButton
-                android:id="@+id/button_percentage"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="3dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/montserrat"
-                android:src="@drawable/ic_percentage"
-                android:contentDescription="@string/add"
-                app:tint="@color/operationOrange"/>
-
-
-
-        </LinearLayout>
 
     </LinearLayout>
 
@@ -239,9 +209,8 @@
         android:layout_marginEnd="8dp"
         android:orientation="horizontal">
 
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="3dp"
             android:layout_weight="1"
@@ -253,54 +222,47 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <ImageButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/button1"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="80dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="80dp"
                     android:layout_margin="3dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/montserrat"
-                    android:src="@drawable/ic_one"
-                    android:contentDescription="@string/add"
-                    app:tint="?android:attr/textColor"/>
+                    android:text="@string/_1"
+                    android:textSize="28sp" />
 
-                <ImageButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/button2"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="80dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="80dp"
                     android:layout_margin="3dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/montserrat"
-                    android:src="@drawable/ic_two"
-                    android:contentDescription="@string/add"
-                    app:tint="?android:attr/textColor"/>
+                    android:text="@string/_2"
+                    android:textSize="28sp" />
 
-                <ImageButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/button3"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="80dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="80dp"
                     android:layout_margin="3dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/montserrat"
-                    android:src="@drawable/ic_three"
-                    android:contentDescription="@string/add"
-                    app:tint="?android:attr/textColor"/>
-
+                    android:text="@string/_3"
+                    android:textSize="28sp" />
 
                 <ImageButton
                     android:id="@+id/button_subtraction"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="80dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="80dp"
                     android:layout_margin="3dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/montserrat"
                     android:src="@drawable/ic_subtraction"
                     android:contentDescription="@string/minus"
-                    app:tint="@color/operationOrange"/>
+                    app:tint="?android:attr/textColor"/>
 
             </LinearLayout>
 
@@ -310,54 +272,45 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <ImageButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/button0"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="80dp"
+                    android:layout_width="match_parent"
                     android:layout_height="80dp"
                     android:layout_margin="3dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/montserrat"
-                    android:src="@drawable/ic_zero"
-                    android:contentDescription="@string/add"
-                    app:tint="?android:attr/textColor"/>
+                    android:text="@string/_0"
+                    android:textSize="28sp" />
 
-
-                <ImageButton
-                    android:id="@+id/button_period"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_margin="3dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/montserrat"
-                    android:src="@drawable/ic_dot"
-                    android:contentDescription="@string/add"
-                    app:tint="?android:attr/textColor"/>
+                    android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/button_ans"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_margin="3dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/montserrat"
-                    android:src="@drawable/ic_ans"
-                    android:contentDescription="@string/add"
-                    app:tint="?android:attr/textColor"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_period"
+                        android:layout_width="wrap_content"
+                        android:layout_height="80dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/montserrat"
+                        android:text="@string/period"
+                        android:textSize="20sp" />
 
-                <ImageButton
-                    android:id="@+id/button_add"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_margin="3dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/montserrat"
-                    android:src="@drawable/ic_add"
-                    android:contentDescription="@string/add"
-                    app:tint="@color/operationOrange"/>
+                    <ImageButton
+                        android:id="@+id/button_add"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="80dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/montserrat"
+                        android:src="@drawable/ic_add"
+                        android:contentDescription="@string/add"
+                        app:tint="?android:attr/textColor"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -366,18 +319,14 @@
 
         <ImageButton
             android:id="@+id/button_equal_to"
-            android:layout_width="100dp"
+            android:layout_width="150dp"
             android:layout_height="match_parent"
-            android:layout_margin="3dp"
             android:layout_weight="1"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="110dp"
             android:background="@drawable/equal_button"
             android:fontFamily="@font/montserrat"
             android:src="@drawable/ic_equal_to"
-            android:contentDescription="@string/add"
-            app:tint="@color/white"/>
+            android:contentDescription="@string/equal_to"
+            app:tint="?android:attr/textColor" />
 
     </LinearLayout>
 
