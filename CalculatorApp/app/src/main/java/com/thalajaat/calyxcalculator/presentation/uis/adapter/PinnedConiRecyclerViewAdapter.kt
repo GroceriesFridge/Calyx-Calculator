@@ -9,9 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thalajaat.calyxcalculator.R
 import com.thalajaat.calyxcalculator.data.datasources.local.room.DropDownRateEntity
 import com.thalajaat.calyxcalculator.databinding.SinglePinnedCurrencyViewBinding
+import com.thalajaat.calyxcalculator.domain.CalculationHandlerInterface
 
 class PinnedConiRecyclerViewAdapter(
     private val context: Context,
+    private val convert: Convert,
+    private val calculatorHandler: CalculationHandlerInterface,
     val onClick: (DropDownRateEntity) -> Unit,
 ) : RecyclerView.Adapter<PinnedConiRecyclerViewAdapter.MyViewHolder>() {
 
@@ -39,13 +42,10 @@ class PinnedConiRecyclerViewAdapter(
     inner class MyViewHolder(private val binding: SinglePinnedCurrencyViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DropDownRateEntity) {
+            val currentAnswer = calculatorHandler.getAnswer().value
             binding.root.setOnClickListener {
-                onClick(item)
+                convert.onClickConvert(item, currentAnswer)
             }
-            binding.name.setOnClickListener {
-                onClick(item)
-            }
-
             binding.name.text =  "${item.start}/${item.end}"
 
         }
@@ -63,7 +63,6 @@ class PinnedConiRecyclerViewAdapter(
     fun getItems(): List<DropDownRateEntity> {
         return items
     }
-
     fun setItems(campaigns: List<DropDownRateEntity>?) {
         items = campaigns?.toMutableList() ?: emptyList()
         notifyDataSetChanged()
@@ -91,4 +90,7 @@ class PinnedConiRecyclerViewAdapter(
             return newList.size
         }
     }
+}
+interface Convert{
+    fun onClickConvert(item: DropDownRateEntity, enteredValue: String)
 }

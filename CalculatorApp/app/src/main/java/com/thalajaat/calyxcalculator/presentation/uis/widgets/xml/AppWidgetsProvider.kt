@@ -11,15 +11,19 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
+import android.widget.Toast
 import com.google.gson.Gson
 import com.thalajaat.calyxcalculator.MainActivity
 import com.thalajaat.calyxcalculator.R
 import com.thalajaat.calyxcalculator.data.datasources.local.room.ConversionDatabase
 import com.thalajaat.calyxcalculator.data.datasources.local.room.ConversionDbRepo
 import com.thalajaat.calyxcalculator.data.datasources.local.room.DropDownRateEntity
-import com.thalajaat.calyxcalculator.dormain.Arithemetics
-import com.thalajaat.calyxcalculator.dormain.CalculationHandler
+import com.thalajaat.calyxcalculator.domain.Arithemetics
+import com.thalajaat.calyxcalculator.domain.CalculationHandler
 import com.thalajaat.calyxcalculator.presentation.viewmodels.CalculatorViewModel
+import com.thalajaat.calyxcalculator.utils.DeleteAllLongClickListener
+import com.thalajaat.calyxcalculator.utils.Utils.CLEAR_ALL_CLICK_ACTION
+import com.thalajaat.calyxcalculator.utils.Utils.flatten
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +57,7 @@ class ExampleAppWidgetProvider : AppWidgetProvider() {
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
     }
 
-   override fun onUpdate(
+    override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
@@ -231,11 +235,15 @@ class ExampleAppWidgetProvider : AppWidgetProvider() {
                 getPendingSelfIntent(context, clear)
             )
 
+//            remoteViews.setOnClickPendingIntent(
+//                R.id.button_delete,
+//                getLongClickPendingIntent(context, appWidgetId)
+//            )
+
             remoteViews.setOnClickPendingIntent(
                 R.id.button_ans,
                 getPendingSelfIntent(context, answer)
             )
-
             updateAppWidget(context, appWidgetManager, appWidgetId, remoteViews)
         }
 
@@ -263,7 +271,19 @@ class ExampleAppWidgetProvider : AppWidgetProvider() {
     val submit = "submit"
     val EXTRA = "EXTRA"
     val answer = "answer"
-    fun getPendingSelfIntent(
+
+    private fun getLongClickPendingIntent(context: Context, appWidgetId: Int): PendingIntent {
+        val intent = Intent(context, DeleteAllLongClickListener::class.java)
+        intent.action = CLEAR_ALL_CLICK_ACTION
+        return PendingIntent.getBroadcast(
+            context,
+            appWidgetId,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
+
+    private fun getPendingSelfIntent(
         context: Context?,
         action: String?,
         extra: String? = null
@@ -300,7 +320,8 @@ class ExampleAppWidgetProvider : AppWidgetProvider() {
                 )
                 val entity = Gson().fromJson(entity, DropDownRateEntity::class.java)
                 if (entity != null) {
-                    getVM(context).convertCurrency(entity, {
+                    val currentValue = calculationHandler.getAnswer().value.flatten()
+                    getVM(context).convertCurrency(currentValue, entity, onDOne = {
                         var text = calculationHandler.getExpression().value
                             .replace("/", "÷")
                             .replace("*", "×").replace("#", "%")
@@ -309,20 +330,31 @@ class ExampleAppWidgetProvider : AppWidgetProvider() {
                                 if (it[1].toString() != ".") {
                                     text = it.trimStart("0".toCharArray().first())
                                 }
-                                it
+                                it.flatten()
                             } else {
-                                it
+                                it.flatten()
                             }
                         }
                         val text2 = calculationHandler.getAnswer().value
                         remoteViews.setTextViewText(R.id.input, text)
                         remoteViews.setTextViewText(R.id.output, text2)
+                        val currencyRate = calculationHandler.getTotalCurrency().value
+                        remoteViews.setTextViewText(
+                            R.id.conversion_rate_output_widget,
+                            currencyRate
+                        )
+                        remoteViews.setViewVisibility(
+                            R.id.conversion_rate_output_widget,
+                            View.VISIBLE
+                        )
                         for (appWidgetId in appWidgetIds) {
                             appWidgetManager.updateAppWidget(componentName, remoteViews)
                         }
-                    }) {
-
-                    }
+                    }, onError = {
+                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                    }, conversionError = { error ->
+                        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    })
                 }
 
             }
@@ -346,16 +378,19 @@ class ExampleAppWidgetProvider : AppWidgetProvider() {
                         }
                         it
                     } else {
-                        it
+                        it.flatten()
                     }
                 }
                 val text2 = calculationHandler.getAnswer().value
                 remoteViews.setTextViewText(R.id.input, text)
                 remoteViews.setTextViewText(R.id.output, text2)
+                remoteViews.setViewVisibility(R.id.conversion_rate_output_widget, View.GONE)
+
                 for (appWidgetId in appWidgetIds) {
                     appWidgetManager.updateAppWidget(componentName, remoteViews)
                 }
             }
+
             answer -> {
                 val appWidgetManager = AppWidgetManager.getInstance(context)
                 val appWidgetIds = appWidgetManager.getAppWidgetIds(
@@ -364,8 +399,13 @@ class ExampleAppWidgetProvider : AppWidgetProvider() {
                         ExampleAppWidgetProvider::class.java
                     )
                 )
-                calculationHandler.clearInput()
-                calculationHandler.addValue(calculationHandler.getAnswer().value.split(" ").first().toString())
+
+                if (calculationHandler.getAnswer().value.isNotEmpty()){
+                    calculationHandler.clearInput()
+                    calculationHandler.addValue(
+                        calculationHandler.getAnswer().value.split(" ").first().toString()
+                    )
+                }
 
                 var text = calculationHandler.getExpression().value
                     .replace("/", "÷")
@@ -381,8 +421,12 @@ class ExampleAppWidgetProvider : AppWidgetProvider() {
                     }
                 }
                 val text2 = calculationHandler.getAnswer().value
-                remoteViews.setTextViewText(R.id.input, text)
+                val currencyRate = calculationHandler.getTotalCurrency().value
+                remoteViews.setTextViewText(R.id.conversion_rate_output_widget, currencyRate)
+                remoteViews.setViewVisibility(R.id.conversion_rate_output_widget, View.GONE)
+                remoteViews.setTextViewText(R.id.input, text.flatten())
                 remoteViews.setTextViewText(R.id.output, text2)
+
                 for (appWidgetId in appWidgetIds) {
                     appWidgetManager.updateAppWidget(componentName, remoteViews)
                 }
@@ -403,7 +447,14 @@ class ExampleAppWidgetProvider : AppWidgetProvider() {
                         ExampleAppWidgetProvider::class.java
                     )
                 )
-                calculationHandler.calculate({}) {
+
+                calculationHandler.calculate({
+
+                }) {
+                    calculationHandler.clearInput()
+                    calculationHandler.addValue(
+                        it.split(" ").first().toString()
+                    )
                     var text = calculationHandler.getExpression().value
                         .replace("/", "÷")
                         .replace("*", "×").replace("#", "%")
@@ -417,9 +468,14 @@ class ExampleAppWidgetProvider : AppWidgetProvider() {
                             it
                         }
                     }
+
+                    val currencyRate = calculationHandler.getTotalCurrency().value
                     val text2 = calculationHandler.getAnswer().value
-                    remoteViews.setTextViewText(R.id.input, text)
+                    remoteViews.setTextViewText(R.id.conversion_rate_output_widget, currencyRate)
+                    remoteViews.setViewVisibility(R.id.conversion_rate_output_widget, View.GONE)
+                    remoteViews.setTextViewText(R.id.input, text.flatten())
                     remoteViews.setTextViewText(R.id.output, text2)
+
                     for (appWidgetId in appWidgetIds) {
                         appWidgetManager.updateAppWidget(componentName, remoteViews)
                     }
@@ -450,13 +506,12 @@ class ExampleAppWidgetProvider : AppWidgetProvider() {
                     }
                 }
                 val text2 = calculationHandler.getAnswer().value
-                remoteViews.setTextViewText(R.id.input, text)
+                remoteViews.setTextViewText(R.id.input, text.flatten())
                 remoteViews.setTextViewText(R.id.output, text2)
                 for (appWidgetId in appWidgetIds) {
                     appWidgetManager.updateAppWidget(componentName, remoteViews)
                 }
             }
-
 
             onebuttonclick, dot, twobuttonclick, threebuttonclick, fourbuttonclick, fivebuttonclick, sixbuttonclick, sevenbuttonclick, eightbuttonclick, ninebuttonclick, zerobuttonclick -> {
                 val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -481,7 +536,7 @@ class ExampleAppWidgetProvider : AppWidgetProvider() {
                     }
                 }
                 val text2 = calculationHandler.getAnswer().value
-                remoteViews.setTextViewText(R.id.input, text)
+                remoteViews.setTextViewText(R.id.input, text.flatten())
                 remoteViews.setTextViewText(R.id.output, text2)
                 for (appWidgetId in appWidgetIds) {
                     appWidgetManager.updateAppWidget(componentName, remoteViews)

@@ -7,10 +7,11 @@ import com.thalajaat.calyxcalculator.data.datasources.local.Coins
 import com.thalajaat.calyxcalculator.data.datasources.local.room.ConversionDbRepoInterface
 import com.thalajaat.calyxcalculator.data.datasources.local.room.DropDownRateEntity
 import com.thalajaat.calyxcalculator.data.datasources.remote.api.ApiHelper
-import com.thalajaat.calyxcalculator.dormain.CalculationHandlerInterface
+import com.thalajaat.calyxcalculator.domain.CalculationHandlerInterface
 import com.thalajaat.calyxcalculator.utils.ResponseState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -20,8 +21,8 @@ import java.util.Date
 import java.util.TimeZone
 
 class CalculatorViewModel(
-     val offlineRepository: ConversionDbRepoInterface,
-    private val calculatorHandler:CalculationHandlerInterface
+    val offlineRepository: ConversionDbRepoInterface,
+    private val calculatorHandler: CalculationHandlerInterface
 ) : ViewModel() {
 
 
@@ -34,7 +35,6 @@ class CalculatorViewModel(
         get() = calculatorHandler
 
     private val api = ApiHelper()
-
 
 
     fun addItems() = viewModelScope.launch {
@@ -53,30 +53,42 @@ class CalculatorViewModel(
 
     }
 
-    var loading = false
-    fun convertCurrency(entity: DropDownRateEntity,
-                        onDOne:()->Unit={},
-                        onError:(String)->Unit) = viewModelScope.launch {
+    private var loading = false
+    fun convertCurrency(
+        value: String,
+        entity: DropDownRateEntity,
+        onDOne: () -> Unit = {},
+        onError: (String) -> Unit,
+        conversionError: (String) -> Unit,
+    ) = viewModelScope.launch {
         Timber.tag("CURRENCY").v(entity.toString())
         if (loading.not()) {
             Timber.tag("NotLoading").d("Here")
-            val value = calculatorHandler.getAnswer().value
-            if ( value.equals("0") || value.isEmpty()) {
+            if (value.equals("0") || value.isEmpty()) {
                 Timber.tag("ContainsArithmeticSign").d(value.toString())
                 onError("Conversion failed, please enter a value")
             } else {
+                val parseable = value.contains("(")
+                var newvalue = value
+                if (parseable) {
+                    newvalue = value.split(" ").first()
+                }
                 val isLongerThanAnHour = entity.timestamp.isOlderThanOneHourLegacy()
                 if (isLongerThanAnHour) {
                     Timber.tag("IsLongerThanHour").d("Here")
                     loading = true
                     api.getCurrencyConversionRate(entity.start, entity.end).collectLatest {
                         loading = false
+                        if (it is ResponseState.Error)
+                        {
+                            conversionError(it.message.toString())
+                        }
                         if (it is ResponseState.Success) {
                             val ratte = it.data?.conversionRate ?: 0.0
                             val timestamp = it.data?.timeStamp ?: ""
 
                             calculatorHandler.setAnswer(
-                                (value.toDouble()) * (ratte) ,
+                                newvalue.toDouble() * ratte,
                                 " ${entity.start}/${entity.end} (${ratte})"
                             )
                             offlineRepository.insetDropDOwnRates(
@@ -95,7 +107,7 @@ class CalculatorViewModel(
                     }
                 } else {
                     calculatorHandler.setAnswer(
-                        value.toDouble() * (entity.rate),
+                        newvalue.toDouble() * (entity.rate),
                         " ${entity.start}/${entity.end} (${entity.rate})"
                     )
                     onDOne()
@@ -110,14 +122,16 @@ class CalculatorViewModel(
     }
 }
 
-class CalculorViewModelFactory(private val repository: ConversionDbRepoInterface,
-    private val handler:CalculationHandlerInterface) :
+class CalculorViewModelFactory(
+    private val repository: ConversionDbRepoInterface,
+    private val handler: CalculationHandlerInterface
+) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CalculatorViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return CalculatorViewModel(repository,handler) as T
+            return CalculatorViewModel(repository, handler) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
