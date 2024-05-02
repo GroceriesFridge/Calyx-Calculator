@@ -1,0 +1,73 @@
+name: Build
+
+on:
+ 
+  push:
+    branches:
+      - Development
+  pull_request:
+    branches:
+      - Development
+
+jobs:
+  sonarqube-analysis:
+    name: Analyze Kotlin Code with SonarQube
+    runs-on: ubuntu-latest  # The workflow will run on the latest Ubuntu runner
+    
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch the entire repository for better analysis
+        
+      # Set up JDK 17
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      
+      # Cache Gradle dependencies
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: gradle-caches-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: gradle-caches-${{ runner.os }}
+      
+      # Cache SonarQube
+      - name: Cache SonarQube
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: sonar-cache-${{ runner.os }}
+          restore-keys: sonar-cache-${{ runner.os }}
+      
+      # Set execute permissions for gradlew
+      - name: Set execute permissions for gradlew
+        run: chmod +x gradlew
+
+      # Run SonarQube analysis for Kotlin code
+      - name: Run SonarQube analysis for Kotlin code
+        run: ./gradlew sonarqube --info \
+          -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.sources=./CalculatorApp/  # Adjust path as needed
+
+      # Run SonarQube analysis for Python code
+      - name: Run SonarQube analysis for Python code
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          projectBaseDir: ./CalculatorBackend/  # Adjust path as needed
+
+      # Optional: Fail the job when the Quality Gate is red
+      # Uncomment the following lines if you want to fail the job when the Quality Gate is red.
+      # - uses: sonarsource/sonarqube-quality-gate-action@master
+      #   timeout-minutes: 5
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
