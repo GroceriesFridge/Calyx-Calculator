@@ -50,7 +50,7 @@ jobs:
 
       # Run SonarQube analysis for Kotlin code
       - name: Run SonarQube analysis for Kotlin code
-        run: ./gradlew sonarqube --info \
+        run: ./CalculatorApp/gradlew sonarqube --info \
           -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
