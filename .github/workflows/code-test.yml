@@ -46,7 +46,7 @@ jobs:
       
       # Set execute permissions for gradlew
       - name: Set execute permissions for gradlew
-        run: chmod +x gradlew
+        run: chmod +x ./gradlew
 
       # Run SonarQube analysis for Kotlin code
       - name: Run SonarQube analysis for Kotlin code
