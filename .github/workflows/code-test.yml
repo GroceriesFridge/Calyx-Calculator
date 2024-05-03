@@ -10,10 +10,14 @@ on:
       - Development
 
 jobs:
-  sonarqube-analysis:
-    name: Analyze Kotlin Code with SonarQube
+  # Job for Kotlin code analysis
+  kotlin-analysis:
+    name: Analyze Kotlin Code
     runs-on: ubuntu-latest  # The workflow will run on the latest Ubuntu runner
-    
+    defaults:
+      run:
+        working-directory: ./CalculatorApp/  # Set the working directory for Kotlin analysis
+
     steps:
       # Checkout the code from the repository
       - name: Checkout repository
@@ -46,16 +50,28 @@ jobs:
       
       # Set execute permissions for gradlew
       - name: Set execute permissions for gradlew
-        run: chmod +x ./CalculatorApp/gradlew
+        run: chmod +x ./gradlew
 
       # Run SonarQube analysis for Kotlin code
       - name: Run SonarQube analysis for Kotlin code
-        run: ./CalculatorApp/gradlew sonarqube --info \
+        run: ./gradlew sonarqube --info \
           -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
           -Dsonar.sources=./CalculatorApp/  # Adjust path as needed
-
+# Job for Python code analysis
+  python-analysis:
+    name: Analyze Python Code
+    runs-on: ubuntu-latest  # The workflow will run on the latest Ubuntu runner
+    defaults:
+      run:
+        working-directory: ./CalculatorBackend/  # Set the working directory for Python analysis
+        
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
       # Run SonarQube analysis for Python code
       - name: Run SonarQube analysis for Python code
         uses: sonarsource/sonarqube-scan-action@master
