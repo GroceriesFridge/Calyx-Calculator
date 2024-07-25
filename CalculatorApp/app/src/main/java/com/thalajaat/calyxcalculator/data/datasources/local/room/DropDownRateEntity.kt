@@ -6,16 +6,14 @@ import com.google.gson.Gson
 
 @Entity(tableName = "DropDownRatesTable")
 data class DropDownRateEntity(
-    @PrimaryKey()
+    @PrimaryKey
     var id: String,
-    val start:String,
-    val index:Int,
-    val rate:Double,
-    val timestamp:String,
-    val end:String,
-    val isPinned:Boolean = false,
+    val start: String,
+    val index: Int,
+    val rate: Double,
+    val timestamp: String,
+    val end: String,
+    val isPinned: Boolean = false,
 ) {
-    fun toJson(): String {
-return Gson().toJson(this)
-    }
+    fun toJson(): String = Gson().toJson(this)
 }
