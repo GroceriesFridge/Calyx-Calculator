@@ -35,19 +35,16 @@ jobs:
         working-directory: ./CalculatorApp/
         run: ./gradlew assembleRelease 
 
-      - uses: MatiasG19/android-sign@v2
+      - uses: r0adkll/sign-android-release@v1
         name: Sign app APK
+        # ID used to access action output
+        id: sign_app
         with:
-          releaseDirectory: |
-            app/build/outputs/apk/release
-            app/build/outputs/bundle/release
+          releaseDirectory: app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          output: build/release/signed
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-          BUILD_TOOLS_VERSION: "30.0.2"      
+          keyPassword: ${{ secrets.KEY_PASSWORD }}     
       
       - uses: actions/upload-artifact@v2
         with:
