@@ -26,7 +26,7 @@ object Coins {
         "BYN",
         "BZD",
         "XOF",
-        "COL",
+        "COP",
         "BMD",
         "BTN",
         "INR",
