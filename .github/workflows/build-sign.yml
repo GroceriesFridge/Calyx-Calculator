@@ -1,4 +1,4 @@
-name: Android build signed CI
+name: Android build sign CI
 
 on:
   push:
